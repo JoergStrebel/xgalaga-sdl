@@ -60,7 +60,7 @@ int alien_shape[ALIENSHAPES] = {
 };
 
 int weapon = 0;
-int maxtorps = 4, numtorps = 0;
+int maxtorps = 10, numtorps = 0;
 
 int plx;
 int pldead = 0;
@@ -89,4 +89,4 @@ SFont_Font *fnt_big_red;
 
 enum gstate gstate;
 
-int fullscreen = 1;				/* windowed = 0, fullscreen != 0 */
+int fullscreen = 0;				/* windowed = 0, fullscreen != 0 */

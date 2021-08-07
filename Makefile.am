@@ -1,4 +1,4 @@
-SUBDIRS = src
+SUBDIRS = src bin
 
 AUTOMAKE_OPTIONS=dist-bzip2
 

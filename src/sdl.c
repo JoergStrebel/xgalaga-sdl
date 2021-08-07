@@ -22,13 +22,9 @@
 
 #include "xgalaga.h"
 
-#if SDL_VERSION_ATLEAST(1,3,0)
+
 SDL_Window *screen;
 SDL_Renderer *renderer;
-#else
-static Uint32 background_color;
-SDL_Surface *screen;
-#endif
 
 void toggle_fullscreen(void)
 {

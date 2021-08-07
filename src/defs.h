@@ -34,7 +34,7 @@
 #endif
 
 #define MAXTORPS 10
-#define MINTORPS 3
+#define MINTORPS 6
 #define TORPSPEED 12
 
 #define ETORPSPEED 8

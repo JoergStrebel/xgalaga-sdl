@@ -1255,7 +1255,6 @@ int main(int argc, char *argv[])
 
 	but = 0;
 
-#ifndef __WII__
     for(ac = 1; ac < argc; ac++) {
         if(*argv[ac] == '-') {
             int w, h;
@@ -1290,14 +1289,10 @@ int main(int argc, char *argv[])
             exit(0);
         }
     }
-#endif
 
     S_Initialize(fullscreen);
 
-#if !SDL_VERSION_ATLEAST(1,3,0)
-    SDL_WM_SetCaption("XGalaga (SDL)", NULL);
-#endif
-
+    
 	if (!loadAllImages()) {
 		fprintf(stderr, "Cannot load one or more images\n");
 		return -1;

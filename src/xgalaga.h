@@ -20,11 +20,8 @@
  */
 
 #include <SDL.h>
-#if SDL_VERSION_ATLEAST(1,3,0)
 #include <SDL_keyboard.h>
 #include <SDL_video.h>
-#endif
-
 #include "defs.h"
 #include "struct.h"
 #include "images.h"

@@ -22,47 +22,18 @@ if test "${ac_cv_c_compiler_gnu}" = "yes"; then
     "
 fi # ac_cv_c_compiler_gnu
 
+SDL_CFLAGS=`sdl2-config --cflags`
+SDL_LIBS=`sdl2-config --libs`
+SDL_LIBS="$SDL_LIBS -lSDL2_ttf -lSDL2_image -lSDL2_mixer -lSDL2_gfx"
+
 # Silent rules; but check if supported.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-# Check for SDL - Will accept 1.2 and 2
-AC_ARG_ENABLE(sdl2,
-  AS_HELP_STRING([--enable-sdl2], [use SDL2 instead of SDL1]),
-  [ if test x"$enableval" = xyes; then
-    with_sdl2="yes"
-  else
-    with_sdl2="no"
-  fi ],
-  [ with_sdl2="no" ]
-)
-
-AC_ARG_ENABLE(ttf,
-  AS_HELP_STRING([--disable-ttf], [disable use of ttf fonts]),
-  [ if test x"$enableval" = xyes; then
-    with_ttf="yes"
-  else
-    with_ttf="no"
-  fi ],
-  [ with_ttf="yes" ]
-)
-
 PKG_PROG_PKG_CONFIG
 
-if test x"$with_sdl2" = xyes; then
-  PKG_CHECK_MODULES([SDL2], [sdl2, SDL2_image, SDL2_mixer, SDL2_gfx])
-  if ! test x"$with_ttf" = xno; then
-    PKG_CHECK_MODULES([SDL2_ttf], [SDL2_ttf])
-  fi
-else
-  PKG_CHECK_MODULES([SDL], [sdl, SDL_image, SDL_mixer, SDL_gfx])
-  if ! test x"$with_ttf" = xno; then
-    PKG_CHECK_MODULES([SDL_ttf], [SDL_ttf])
-  fi
-fi
-
-if ! test "x$with_ttf" = "xno"; then
-   AC_DEFINE([HAVE_LIBSDLX_TTF], [1], [Build with TTF font support])
-fi
+PKG_CHECK_MODULES([SDL2], [sdl2, SDL2_image, SDL2_mixer, SDL2_gfx])
+PKG_CHECK_MODULES([SDL2_ttf], [SDL2_ttf])
+AC_DEFINE([HAVE_LIBSDLX_TTF], [1], [Build with TTF font support])
 
 dnl Checks for header files.
 AC_HEADER_STDC
@@ -72,6 +43,9 @@ dnl Checks for library functions.
 AC_CHECK_FUNCS(random lrand48)
 
 AC_SUBST(datadir)
+AC_SUBST(bindir)
+AC_SUBST(SDL_CFLAGS)
+AC_SUBST(SDL_LIBS)
 
 AC_CONFIG_HEADERS([src/config.h])
 
@@ -86,11 +60,12 @@ AC_MSG_RESULT([
         sysconfdir:             ${sysconfdir}
         libdir:                 ${libdir}
         includedir:             ${includedir}
+        datadir:                ${datadir}
 
         compiler:               ${CC}
         cflags:                 ${CFLAGS}
         ldflags:                ${LDFLAGS}
-
-        SDL2:                   ${with_sdl2}
-        SDL_TTF:                ${with_ttf}
+        SDL cflags:             ${SDL_CFLAGS}
+        SDL libs:               ${SDL_LIBS}
+        
 ])
