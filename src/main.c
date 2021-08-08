@@ -1254,7 +1254,7 @@ int main(int argc, char *argv[])
     int but;
 
 	but = 0;
-
+    
     for(ac = 1; ac < argc; ac++) {
         if(*argv[ac] == '-') {
             int w, h;
@@ -1289,7 +1289,11 @@ int main(int argc, char *argv[])
             exit(0);
         }
     }
-
+    
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Fullscreen %d\n", fullscreen);
+    fprintf(stdout, "SDL version %d\n", SDL_COMPILEDVERSION);
+    fprintf(stdout, "SDL_VERSION_ATLEAST(1,3,0) %d\n", SDL_VERSION_ATLEAST(1,3,0));
+    
     S_Initialize(fullscreen);
 
     

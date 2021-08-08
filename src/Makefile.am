@@ -1,4 +1,4 @@
-bin_PROGRAMS = xgalaga-sdl
+bin_PROGRAMS = xgalaga_sdl
 
 xgalaga_sdl_LDADD = @SDL_LIBS@
 xgalaga_sdl_CFLAGS = -include config.h -DDATADIR=\"@datadir@\" @SDL_CFLAGS@

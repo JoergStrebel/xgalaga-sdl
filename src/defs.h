@@ -39,7 +39,7 @@
 
 #define ETORPSPEED 8
 
-#define MINSPEED 3
+#define MINSPEED 5
 #define MAXSPEED 8
 
 #define TORPDELAY 5

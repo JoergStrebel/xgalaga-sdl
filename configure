@@ -582,6 +582,7 @@ PACKAGE_STRING='XGalaga-SDL 2.1.1.0-sdl'
 PACKAGE_BUGREPORT=''
 PACKAGE_URL=''
 
+ac_unique_file="src"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
@@ -2768,6 +2769,7 @@ END
 fi
 
 
+
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -3822,6 +3824,9 @@ if test "${ac_cv_c_compiler_gnu}" = "yes"; then
     -Wpointer-arith \
     -Wreturn-type \
     -Wstrict-prototypes \
+    -march=native \
+    -mtune=native
+    -std=c99 -pedantic-errors \
     "
 fi # ac_cv_c_compiler_gnu
 
@@ -4600,6 +4605,50 @@ _ACEOF
 
 fi
 done
+
+
+# Checks for libraries.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SDL2_ttf in -lSDL2" >&5
+$as_echo_n "checking for SDL2_ttf in -lSDL2... " >&6; }
+if ${ac_cv_lib_SDL2_SDL2_ttf+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lSDL2 SDL2_gfx $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char SDL2_ttf ();
+int
+main ()
+{
+return SDL2_ttf ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_SDL2_SDL2_ttf=yes
+else
+  ac_cv_lib_SDL2_SDL2_ttf=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_SDL2_SDL2_ttf" >&5
+$as_echo "$ac_cv_lib_SDL2_SDL2_ttf" >&6; }
+if test "x$ac_cv_lib_SDL2_SDL2_ttf" = xyes; then :
+  SDL2_image
+else
+  SDL2_mixer
+fi
 
 
 
@@ -6083,6 +6132,7 @@ fi
         ldflags:                ${LDFLAGS}
         SDL cflags:             ${SDL_CFLAGS}
         SDL libs:               ${SDL_LIBS}
+        SDL version:            ${SDL_VERSION}
 
 " >&5
 $as_echo "
@@ -6100,5 +6150,6 @@ $as_echo "
         ldflags:                ${LDFLAGS}
         SDL cflags:             ${SDL_CFLAGS}
         SDL libs:               ${SDL_LIBS}
+        SDL version:            ${SDL_VERSION}
 
 " >&6; }

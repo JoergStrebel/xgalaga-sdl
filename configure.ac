@@ -1,6 +1,9 @@
 dnl Process this file with autoconf to produce a configure script.
+
+AC_PREREQ([2.69])
 AC_INIT(XGalaga-SDL, 2.1.1.0-sdl)
 AM_INIT_AUTOMAKE
+AC_CONFIG_SRCDIR([src])
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -19,6 +22,9 @@ if test "${ac_cv_c_compiler_gnu}" = "yes"; then
     -Wpointer-arith \
     -Wreturn-type \
     -Wstrict-prototypes \
+    -march=native \
+    -mtune=native
+    -std=c99 -pedantic-errors \
     "
 fi # ac_cv_c_compiler_gnu
 
@@ -41,6 +47,9 @@ AC_CHECK_HEADERS(fcntl.h malloc.h strings.h unistd.h)
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS(random lrand48)
+
+# Checks for libraries.
+AC_CHECK_LIB(SDL2, SDL2_ttf, SDL2_image, SDL2_mixer, SDL2_gfx)
 
 AC_SUBST(datadir)
 AC_SUBST(bindir)
@@ -67,5 +76,6 @@ AC_MSG_RESULT([
         ldflags:                ${LDFLAGS}
         SDL cflags:             ${SDL_CFLAGS}
         SDL libs:               ${SDL_LIBS}
+        SDL version:            ${SDL_VERSION}
         
 ])
