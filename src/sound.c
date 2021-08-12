@@ -26,6 +26,7 @@
 void init_sound () {}
 void sound_exit(void) {}
 void play_sound (int sound) {}
+void play_music (void) {}
 
 #else
 #include <SDL_mixer.h>
@@ -45,23 +46,31 @@ static const char *FILENAME[] = {
 	"smart.wav",
 };
 
+static const char *MUSICNAME = "intro_small.wav";
+
 #define NUM_SOUNDS  (sizeof(FILENAME)/sizeof(char*))
 
 static Mix_Chunk *sounds[NUM_SOUNDS];
+static Mix_Music *title_music;
 
 void init_sound (void)
 {
 	unsigned int i;
 	char filename[MAXFILENAME];
+    char musicname[MAXFILENAME];
+
+    int initted=Mix_Init(0); //TODO: Use the return value and check for capabilities
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Mixer Init capabilities %d\n", initted);
 
     /* Open the audio device */
-    if (Mix_OpenAudio(11025, AUDIO_U8, 1, 512) < 0 ) {
+    if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024) < 0 ) {
         fprintf(stderr,
-				"Warning: Couldn't set 11025 Hz 8-bit audio\n- Reason: %s\n",
+				"Warning: Couldn't init mixer \n- Reason: %s\n",
 				SDL_GetError());
 		return;
     }
-
+    
+    /* Load the sound effects */
 	for (i=0; i<NUM_SOUNDS; i++) {
 		snprintf(filename, MAXFILENAME, "%s/sounds/%s", DATADIR, FILENAME[i]);
 		filename[MAXFILENAME-1] = '\0';
@@ -70,6 +79,13 @@ void init_sound (void)
 		if (!sounds[i])
 			fprintf(stderr, "Warning: Couldn't load sound %s\n", filename);
 	}
+	
+	/* Load the music */
+    snprintf(musicname, MAXFILENAME, "%s/sounds/%s", DATADIR, MUSICNAME);
+    musicname[MAXFILENAME-1] = '\0';
+	title_music = Mix_LoadMUS(musicname);
+	if (!title_music)
+		fprintf(stderr, "Warning: Couldn't load sound %s\n", musicname);
 
 	audioOK = 1;
 }
@@ -92,5 +108,11 @@ void play_sound (int sound)
 	if (audioOK && playSounds)
 		Mix_PlayChannel(sound, sounds[sound], 0);
 }
+
+void play_music (void)
+{
+	
+}
+
 
 #endif	/* NOSOUND */

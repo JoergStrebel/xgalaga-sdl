@@ -31,3 +31,4 @@
 
 void init_sound (void);			/* Init Sound System */
 void play_sound (int k);		/* Play a Sound */
+void play_music (void);		/* Play music */

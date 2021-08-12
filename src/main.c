@@ -123,13 +123,10 @@ static void get_random_star_color(struct star *star)
 		r = 0xFF; g = 0xFF; b = 0x00; break;
 	}
 
-#if SDL_VERSION_ATLEAST(1,3,0)
 	star->pixel.r = r;
 	star->pixel.g = g;
 	star->pixel.b = b;
-#else
-	star->pixel.rgb = SDL_MapRGB(screen->format, r, g, b);
-#endif
+
 }
 
 static void init_stars(void)
