@@ -44,34 +44,5 @@ Keyboard commands:
             right_arrow - move right
             space_bar   - fire
 
-Credits:
-   Galaga code:
-            Joe Rumsey (mrogre@mediaone.net)
-   X interface:
-            Bill Dyess(dyessww@eng.auburn.edu),
-            Rob Forsman(thoth@cis.ufl.edu),
-            and about a million others.
-
-   Sound server/interface:
-            Sujal Patel (smpatel@wam.umd.edu)
-            Paul Kendall (paul@kcbbs.gen.nz) (Sun and NAS support)
-
-   Pixmaps:
-            Joe Rumsey (ogre@atomic.com)
-            Mike McGrath (mcgrath@epx.cis.umn.edu)
-
-   SDL port:
-            Andy Tarkinson
-            Frank Zago
-            Dan Espen
-
-   Thanks: Alec Habig for mirroring it at indiana
-       Johnathan Hardwick for testing on many
-             different platforms and sending bug fixes
-       Koala team in France for bug fixes and for writing the XPM
-         lib.
-       All the dupes^H^H^H^H^Hnetrekers who helped
-         test it at the earliest stages.
-       Bill Clarke (bill@discworld.anu.edu.au) for high score hacks
-       Everyone that's written me thanking me, and especially
-         the few who sent the five bucks in.
+Credits: see CREDITS file
+   

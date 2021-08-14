@@ -189,5 +189,6 @@ void SFont_WriteRight(const SFont_Font *Font,
 {
     SFont_Write(Font, screen->w - SFont_TextWidth(Font, text), y, text);
 }
-
+#else
+int dummy=0;
 #endif /* HAVE_LIBSDL_TTF */

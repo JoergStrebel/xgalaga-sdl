@@ -1,29 +1,31 @@
-
-
-
-
-
-
-
-
 CREDITS
 =======
 
 Original author:
-Joe Rumsey 
+    Joe Rumsey 
 
 X interface:
-Bill Dyess
-Rob Forsman
-and about a million others.
+    Bill Dyess
+    Rob Forsman
+    and about a million others.
 
 Sound server/interface:
-Sujal Patel
-Paul Kendall (Sun and NAS support)
+    Sujal Patel
+    Paul Kendall (Sun and NAS support)
 
 Pixmaps:
-Joe Rumsey
-Mike McGrath
+    Joe Rumsey
+    Mike McGrath
+
+SDL port:
+    Andy Tarkinson
+    Frank Zago
+    Dan Espen
+    Jörg Strebel
+
+Music: Boss Theme by sawsquarenoise 
+licensed under a Attribution 4.0 International License.
+
 
 Thanks: 
 Alec Habig for mirroring it at indiana
@@ -45,8 +47,12 @@ Bryce Wagner, for his work on the hyperspace patch
 John Strickland, for his work on the hyperspace patch
 David Enderson, for his work on the hyperspace patch
 Greg Bell, for testing with FC4
+Karl Bartel, for the TTF support
+Jörg Strebel
+
 
 If somebody means to be missed on this list...
 ... please let me know at tshe_hermann remove this at web dot de
 
 Have fun with Xgalaga!!!!
+

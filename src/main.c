@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "config.h"
 #include "xgalaga.h"
 
 static struct torp torps[MAXTORPS];

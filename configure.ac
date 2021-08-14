@@ -22,7 +22,7 @@ if test "${ac_cv_c_compiler_gnu}" = "yes"; then
     -Wpointer-arith \
     -Wreturn-type \
     -Wstrict-prototypes \
-    -std=c99 -pedantic-errors \
+    -std=gnu99 -D_GNU_SOURCE -pedantic-errors \
     "
 fi # ac_cv_c_compiler_gnu
 
