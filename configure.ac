@@ -22,8 +22,6 @@ if test "${ac_cv_c_compiler_gnu}" = "yes"; then
     -Wpointer-arith \
     -Wreturn-type \
     -Wstrict-prototypes \
-    -march=native \
-    -mtune=native
     -std=c99 -pedantic-errors \
     "
 fi # ac_cv_c_compiler_gnu

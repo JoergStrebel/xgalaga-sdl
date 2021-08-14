@@ -28,7 +28,9 @@
 #define SND_DDLOO     5
 #define SND_WARP      6
 #define SND_SMART     7
+#define MUSIC_VOL     MIX_MAX_VOLUME/6
 
 void init_sound (void);			/* Init Sound System */
 void play_sound (int k);		/* Play a Sound */
 void play_music (void);		/* Play music */
+void stop_music (void);		/* stop music */

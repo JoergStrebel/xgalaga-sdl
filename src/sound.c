@@ -27,6 +27,7 @@ void init_sound () {}
 void sound_exit(void) {}
 void play_sound (int sound) {}
 void play_music (void) {}
+void stop_music (void) {}
 
 #else
 #include <SDL_mixer.h>
@@ -46,7 +47,7 @@ static const char *FILENAME[] = {
 	"smart.wav",
 };
 
-static const char *MUSICNAME = "intro_small.wav";
+static const char *MUSICNAME = "sawsquarenoise - Boss Theme.wav";
 
 #define NUM_SOUNDS  (sizeof(FILENAME)/sizeof(char*))
 
@@ -81,11 +82,12 @@ void init_sound (void)
 	}
 	
 	/* Load the music */
-    snprintf(musicname, MAXFILENAME, "%s/sounds/%s", DATADIR, MUSICNAME);
-    musicname[MAXFILENAME-1] = '\0';
+	snprintf(musicname, MAXFILENAME, "%s/sounds/%s", DATADIR, MUSICNAME);
+	musicname[MAXFILENAME-1] = '\0';
 	title_music = Mix_LoadMUS(musicname);
 	if (!title_music)
-		fprintf(stderr, "Warning: Couldn't load sound %s\n", musicname);
+		fprintf(stderr, "Warning: Couldn't load music %s\n", musicname);
+	Mix_VolumeMusic(MUSIC_VOL);
 
 	audioOK = 1;
 }
@@ -111,8 +113,21 @@ void play_sound (int sound)
 
 void play_music (void)
 {
-	
+	if (audioOK ) {
+		int initmusic=Mix_PlayMusic(title_music, -1);
+		if(initmusic==-1) {
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_PlayMusic: %s\n", Mix_GetError());
+		 	// well, there's no music, but most games don't break without music...
+		}
+
+	} else {
+		SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "No music output possible");
+	}	
 }
 
+void stop_music (void)
+{
+	Mix_HaltMusic();
+}	
 
 #endif	/* NOSOUND */

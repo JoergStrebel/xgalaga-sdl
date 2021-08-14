@@ -1248,9 +1248,7 @@ static int init_fonts(void)
 int main(int argc, char *argv[])
 {
     int ac;
-    int but;
-
-	but = 0;
+    int but=0;
     
     for(ac = 1; ac < argc; ac++) {
         if(*argv[ac] == '-') {
@@ -1288,18 +1286,19 @@ int main(int argc, char *argv[])
     }
     
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Fullscreen %d\n", fullscreen);
-    fprintf(stdout, "SDL version %d\n", SDL_COMPILEDVERSION);
-    fprintf(stdout, "SDL_VERSION_ATLEAST(1,3,0) %d\n", SDL_VERSION_ATLEAST(1,3,0));
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "SDL version %d\n", SDL_COMPILEDVERSION);
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "SDL_VERSION_ATLEAST(1,3,0) %d\n", SDL_VERSION_ATLEAST(1,3,0));
     
-    S_Initialize(fullscreen);
-
     
-	if (!loadAllImages()) {
+    S_Initialize(fullscreen); // init video
+    init_sound(); //init audio
+    
+    if (!loadAllImages()) {
 		fprintf(stderr, "Cannot load one or more images\n");
 		return -1;
 	}
 
-	if (!init_fonts()) {
+    if (!init_fonts()) {
 		fprintf(stderr, "Invalid font\n");
 		return -1;
     }
@@ -1318,30 +1317,30 @@ int main(int argc, char *argv[])
     init_explosions();
     init_score();
     init_prizes();
-    init_sound();
     init_aliens(level);
     init_framerate();
     init_joystick();
 
     ships = 2;
     nextBonus = 20000;
-	gstate = INTRO;
-	plx = winwidth/2;
+    gstate = INTRO;
+    play_music();
+    plx = winwidth/2;
 
     while(1) {
         counter++;
 
-		S_ClearScreen();
+	S_ClearScreen();
 
-		/* For the benefit of unbuffered mode, the most important things are
-		 * erased/redrawn closest together so they spend the least time blanked.
-		 * player, aliens and etorps are most important for game play.
-		 * pause, title and name are important in their modes and aren't done
-		 * otherwise.
-		 *
-		 * The title, name, pause and score "extra ship" want to overlay
-		 * everything else drawn, so they come last.
-		 */
+	/* For the benefit of unbuffered mode, the most important things are
+	 * erased/redrawn closest together so they spend the least time blanked.
+	 * player, aliens and etorps are most important for game play.
+	 * pause, title and name are important in their modes and aren't done
+	 * otherwise.
+	 *
+	 * The title, name, pause and score "extra ship" want to overlay
+	 * everything else drawn, so they come last.
+	 */
         undo_explosions();
         undo_prizes();
         undo_aliens();
