@@ -19,9 +19,9 @@ See the file INSTALL for installation instructions.
 
 ## Screenshots
 
-![Screenshot of title](https://github.com/JoergStrebel/xgalaga-sdl/tree/master/images/screenshot_title.png "Screenshot of title")
+![Screenshot of title](images/screenshot_title.png "Screenshot of title")
 
-![Screenshot of game](https://github.com/JoergStrebel/xgalaga-sdl/tree/master/images/screenshot_game.png "Screenshot of game")
+![Screenshot of game](images/screenshot_game.png "Screenshot of game")
 
 ## Command line options
 
