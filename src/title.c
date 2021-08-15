@@ -190,7 +190,10 @@ static void show_credits(void)
 
 			strncpy(chLBuf, gchLBuf+i*(LINESIZE+1), LINESIZE);
 			j = top + lines*font_height + ((pagetimer-1) % (font_height*SPEEDFACTOR))/SPEEDFACTOR;
+			SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Credit line:  %d, %s\n", i, chLBuf);
+			
 			SFont_WriteCenter(fnt_reg_green, j, chLBuf);
+			
 			lines++;
 			if (lines > VISIBLELINES)
 				break;
@@ -230,8 +233,7 @@ void do_title(void)
     SFont_WriteCenter (fnt_reg_yellow, top + titleImage->height - 10, vbuf);
 
     top += titleImage->height + 15;
-    if (gstate == GETTING_NAME)
-		title_page = 0;
+    if (gstate == GETTING_NAME) title_page = 0;
 
 	SFont_WriteCenter(fnt_reg_green, top, "Copyright (c) 1995-1998   Joe Rumsey");
 	top+= SFont_TextHeight(fnt_reg_green);
@@ -242,12 +244,16 @@ void do_title(void)
 	top+= SFont_TextHeight(fnt_reg_green);
 #endif
 
-	if (title_page == 0)
-        show_help(top);
-	else if (title_page == 1)
-		show_scores(top);
-	else if (title_page == 2)
-		show_bonuses(top);
+	/* 
+	 * logic for selecting the contents of the title screen
+	 * variable title_page controls the display
+	 */
+	if (title_page == 0) 
+	{
+		show_help(top);
+	}
+	else if (title_page == 1)  show_scores(top);
+	else if (title_page == 2)  show_bonuses(top);
 
 	SFont_WriteCenter(fnt_reg_yellow, winheight - 2*SFont_TextHeight(fnt_reg_yellow), "Press space to start");
 	SFont_WriteCenter(fnt_reg_yellow, winheight - SFont_TextHeight(fnt_reg_yellow), "Or q to quit");

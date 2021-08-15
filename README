@@ -44,5 +44,5 @@ Keyboard commands:
             right_arrow - move right
             space_bar   - fire
 
-Credits: see CREDITS file
+Credits: see CREDITS file. Please note: the file is pure ASCII - if you put 8-bit or UTF-8 characters there, the program will crash.
    

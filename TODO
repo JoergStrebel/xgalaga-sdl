@@ -1,5 +1,4 @@
-- Fix highscore list. During the title presentation in full screen mode, it always crashes the game.
-- Fix titles - load credits from current credits file and update credits file
+- Turn README file into README.md. Add some screenshots to the README.md.
 - Add new files to Makefile.am so that they will be correctly installed
 - Get rid of xgalaga.h and only include the necesary header files in each compilation unit
 - Test install

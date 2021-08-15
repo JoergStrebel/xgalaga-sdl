@@ -22,8 +22,8 @@ if test "${ac_cv_c_compiler_gnu}" = "yes"; then
     -Wpointer-arith \
     -Wreturn-type \
     -Wstrict-prototypes \
-    -std=gnu99 -D_GNU_SOURCE -pedantic-errors \
-    "
+ -std=gnu99 -D_GNU_SOURCE -pedantic-errors"
+
 fi # ac_cv_c_compiler_gnu
 
 SDL_CFLAGS=`sdl2-config --cflags`
