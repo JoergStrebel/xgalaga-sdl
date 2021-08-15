@@ -29,27 +29,27 @@ SDL_Renderer *renderer;
 void toggle_fullscreen(void)
 {
 	const int screen_height = winheight+WINTOPOV+WINBOTOV;
-    Uint32 flags = SDL_GetWindowFlags(screen) ^ SDL_WINDOW_FULLSCREEN_DESKTOP;
+	Uint32 flags = SDL_GetWindowFlags(screen) ^ SDL_WINDOW_FULLSCREEN_DESKTOP;
 
-    if (SDL_SetWindowFullscreen(screen, flags) < 0)
+	if (SDL_SetWindowFullscreen(screen, flags) < 0)
         return;
 
-    SDL_SetWindowSize(screen, winwidth, screen_height);
+	SDL_SetWindowSize(screen, winwidth, screen_height);
 }
 
 void S_Initialize(int fullscreen)
 {
 	const int screen_height = winheight+WINTOPOV+WINBOTOV;
-    Uint32 flags;
+	Uint32 flags;
 
-    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) < 0) {
-        fprintf(stderr, "Couldn't init video: %s\n", SDL_GetError());
-        exit(1);
-    }
+	if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) < 0) {
+        	fprintf(stderr, "Couldn't init video: %s\n", SDL_GetError());
+        	exit(1);
+    	}
 
 	atexit(SDL_Quit);
     
-    flags = fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN;
+	flags = fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN;
     
 	screen = SDL_CreateWindow("Xgalaga SDL",
 							  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
