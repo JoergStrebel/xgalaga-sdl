@@ -190,7 +190,9 @@ static void show_credits(void)
 
 			strncpy(chLBuf, gchLBuf+i*(LINESIZE+1), LINESIZE);
 			j = top + lines*font_height + ((pagetimer-1) % (font_height*SPEEDFACTOR))/SPEEDFACTOR;
-			SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Credit line:  %d, %s\n", i, chLBuf);
+			#if ENABLE_LOGGING
+			SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Credit line:  %d, %s\n", i, chLBuf);
+			#endif
 			
 			SFont_WriteCenter(fnt_reg_green, j, chLBuf);
 			

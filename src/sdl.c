@@ -48,18 +48,21 @@ void S_Initialize(int fullscreen)
     	}
 
 	atexit(SDL_Quit);
-    
-	flags = fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN;
-    
-	screen = SDL_CreateWindow("Xgalaga SDL",
-							  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-							  winwidth, screen_height,
-							  flags);
-    if (!screen) {
-        fprintf(stderr, "Couldn't set %dx%d video mode: %s\n",
-                winwidth, screen_height, SDL_GetError());
-        exit(1);
-    }
+    	
+	if (fullscreen)	{
+		flags =  SDL_WINDOW_FULLSCREEN_DESKTOP;    
+		screen = SDL_CreateWindow("Xgalaga SDL", SDL_WINDOWPOS_UNDEFINED, 
+			SDL_WINDOWPOS_UNDEFINED, 0, 0, flags);
+	} else {
+		flags = SDL_WINDOW_SHOWN;
+		screen = SDL_CreateWindow("Xgalaga SDL", SDL_WINDOWPOS_CENTERED, 
+			SDL_WINDOWPOS_CENTERED, winwidth, screen_height, flags);
+	}
+        if (!screen) {
+        	fprintf(stderr, "Couldn't set %dx%d video mode: %s\n",
+                	winwidth, screen_height, SDL_GetError());
+		exit(1);
+	}
 
 	// We must call SDL_CreateRenderer in order for draw calls to affect this window.
 	renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_ACCELERATED);
@@ -73,8 +76,10 @@ void S_Initialize(int fullscreen)
         exit(1);
 	}
 
-	if (fullscreen)
+	if (fullscreen) {
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  
 		SDL_RenderSetLogicalSize(renderer, winwidth, screen_height);
+	}
 
 	SDL_ShowCursor(SDL_DISABLE);
 }

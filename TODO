@@ -1,5 +1,4 @@
-- Turn README file into README.md. Add some screenshots to the README.md.
-- Add new files to Makefile.am so that they will be correctly installed
+- Fix crashes that happen when the highscores are entered in the game 
 - Get rid of xgalaga.h and only include the necesary header files in each compilation unit
 - Test install
 

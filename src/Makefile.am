@@ -28,4 +28,5 @@ xgalaga_sdl_SOURCES = \
 	sound.h \
 	struct.h \
 	title.c \
-	xgalaga.h
+	xgalaga.h \
+	config.h

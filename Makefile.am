@@ -6,8 +6,11 @@ dist_man_MANS = xgalaga-sdl.6x
 
 nobase_dist_data_DATA = \
 	CREDITS \
+	README.md \
 	README \
 	LICENSE \
+	COPYING \
+	TODO \
 	fonts/LiberationMono-Bold.ttf \
 	fonts/copyright \
 	images/al.png \
@@ -67,6 +70,7 @@ nobase_dist_data_DATA = \
 	sounds/smart.wav \
 	sounds/torphit.wav \
 	sounds/warp.wav \
+	sounds/sawsquarenoise\ -\ Boss\ Theme.wav \
 	levels/level1.xgl \
 	levels/level10.xgl \
 	levels/level11.xgl \
