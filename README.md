@@ -50,5 +50,9 @@ Basic instructions: The ship is controlled by the keyboard, space bar fires.
 
 ## Credits
 
-See CREDITS file. Please note: the file is pure ASCII - if you put 8-bit or UTF-8 characters there, the program will crash.
+See CREDITS file. 
+
+## Known errors and limitations
+ * The CREDITS file must only contain ASCII characters with decimal values from 32 to 126 - if you put 8-bit or UTF-8 characters there, the program will crash.
+ * The highscore list will also only contain this limited set of characters, as both src/TFont.c and src/SFont.c only provide this set.
    

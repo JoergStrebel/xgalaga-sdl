@@ -1,4 +1,3 @@
-- Fix crashes that happen when the highscores are entered in the game 
 - Get rid of xgalaga.h and only include the necesary header files in each compilation unit
 - Test install
 

@@ -115,12 +115,8 @@ SFont_Font* SFont_InitFont(int which)
 		surface = TTF_RenderText_Blended(tmpfont, ca, Color);
 		Font->CharW[i-32] = surface->w;
 		Font->CharH = surface->h;
-#if SDL_VERSION_ATLEAST(1,3,0)
 		Font->CharSurf[i-32] = SDL_CreateTextureFromSurface(renderer, surface);
 		SDL_FreeSurface(surface);
-#else
-		Font->CharSurf[i-32] = surface;
-#endif
     }
 
 	TTF_CloseFont(tmpfont);
@@ -145,11 +141,7 @@ void SFont_Write(const SFont_Font *Font, int x, int y, const char *text)
 		srcrect.w = dstrect.w = Font->CharW[charoffset];
 		srcrect.x = 0;
 		dstrect.x = x;
-#if SDL_VERSION_ATLEAST(1,3,0)
 		SDL_RenderCopy(renderer, Font->CharSurf[charoffset], &srcrect, &dstrect);
-#else
-		SDL_BlitSurface(Font->CharSurf[charoffset], &srcrect, screen, &dstrect);
-#endif
 		dstrect.h=srcrect.h;              /* changed by blit */
 		x += dstrect.w;
     }

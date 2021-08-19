@@ -112,6 +112,13 @@ char *getUsersFullName()
     /* shorten to 20 chars */
     fullname[19] = 0;
 
+    /* SFont and TFont can only handle characters with values from 32d und 127d (ASCII) */
+    for (int i=0; i<=18; i++) {
+	if (fullname[i]>126 || fullname[i]<32) {
+		fullname[i]=32;
+	}
+    } 
+
     /* Return their name without any trailing stuff */
     return(fullname);
 }
@@ -249,13 +256,9 @@ void show_scores(int top)
 
 	/* Draw a line. */
 	length = SFont_TextWidth(fnt_reg_yellow, labels);
-#if SDL_VERSION_ATLEAST(1,3,0)
 	color.r = 0xff;
 	color.g = 0x00;
 	color.b = 0x00;
-#else
-	color.rgb = SDL_MapRGB(screen->format, 0xff, 0, 0);
-#endif
 	S_DrawRect((winwidth-length)/2, top + 1 + SFont_TextHeight(fnt_reg_yellow),
 			   length, 1,
 			   color);
@@ -300,8 +303,8 @@ void load_scores(void)
 				my_scores[i].score = SDL_SwapBE32(my_scores[i].score);
 				my_scores[i].level = SDL_SwapBE32(my_scores[i].level);
 			}
-		}
 		close(hsf);
+		}
     } else {
 		fprintf(stderr, "No HOME variable, so no personal score file.\n");
 		for(i=0;i<NUM_MY_SCORES;i++) {
