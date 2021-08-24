@@ -92,12 +92,8 @@ static void show_help(int top)
 	SFont_WriteCenter(fnt_reg_cyan, top+5*dy, "  Q                  quick quit      ");
 	SFont_WriteCenter(fnt_reg_cyan, top+6*dy, "  k                  start game      ");
 	SFont_WriteCenter(fnt_reg_cyan, top+7*dy, "  s                  toggle sound    ");
-#ifndef ORIGINAL_XGALAGA
-	SFont_WriteCenter(fnt_reg_cyan, top+8*dy, "  x                  toggle shields  ");
-#endif
 
     SFont_WriteCenter(fnt_reg_green, top+10*dy, "Bonus ships at 20,000, 50,000, then every 50,000.");
-	SFont_WriteCenter(fnt_reg_cyan, top+12*dy, "XGalaga-SDL Home page: http://sourceforge.net/projects/xgalaga-sdl/");
 }
 
 static void read_credits(void)
@@ -237,14 +233,6 @@ void do_title(void)
     top += titleImage->height + 15;
     if (gstate == GETTING_NAME) title_page = 0;
 
-	SFont_WriteCenter(fnt_reg_green, top, "Copyright (c) 1995-1998   Joe Rumsey");
-	top+= SFont_TextHeight(fnt_reg_green);
-	SFont_WriteCenter(fnt_reg_green, top, "Maintenance 2008 by Hermann Riedel");
-	top+= 2*SFont_TextHeight(fnt_reg_green);
-#ifndef ORIGINAL_XGALAGA
-	SFont_WriteCenter(fnt_reg_green, top, "XGalaga: Hyperspace 0.9");
-	top+= SFont_TextHeight(fnt_reg_green);
-#endif
 
 	/* 
 	 * logic for selecting the contents of the title screen

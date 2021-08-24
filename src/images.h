@@ -28,7 +28,6 @@ struct W_Image {
 
 enum {
 	I_FIRST,
-
 	I_AL = I_FIRST,
 	I_ALIEN1,
 	I_ALIEN10,
@@ -70,18 +69,11 @@ enum {
 	I_S500,
 	I_SHIELD,
 	I_TITLE,
-
-#ifndef ORIGINAL_XGALAGA
-	I_PR_SPREAD,
-	I_PR_MACHINE,
-#endif
-
 	F_REG_GREEN,
 	F_REG_CYAN,
 	F_REG_YELLOW,
 	F_REG_RED,
 	F_REG_GREY,
 	F_BIG_RED,
-
 	I_LAST = F_BIG_RED,
 };

@@ -36,10 +36,6 @@ static int starspeed = 1;
 static int attacking = 0, maxattacking, entering=0;
 static int maxetorps = 5, numetorps=0;
 static int plflash = 50;
-#ifndef ORIGINAL_XGALAGA
-static int shots = 0;
-static int hits = 0;
-#endif
 static int mx;
 
 static struct W_Image *playerShip;
@@ -78,10 +74,6 @@ static void xgal_exit(int v)
 static void print_usage(void)
 {
     printf("XGalaga v%s\n"
-		   "Copyright (c) 1995-1998 Joe Rumsey\n"
-		   "Copyright (c) 2000 Andy Tarkinson\n"
-		   "Copyright (c) 2010 Frank Zago\n"
-		   "Contributions by Hermann Riedel\n"
 		   "Command line options:\n"
 		   "  -scores              Prints out the high score files and exits\n"
 		   "  -nosound             Turn sound OFF\n"
@@ -90,9 +82,6 @@ static void print_usage(void)
 		   "  -winsize <WxH>       Window size (default 468 x 596)\n"
 		   "\n"
 		   "This game is free software, under the GPLv2\n"
-		   "\n"
-		   "Basic instructions:\n"
-		   "  It's Galaga, you know how to play Galaga, stop bothering me.\n"
 		   "\n"
 		   "Keyboard commands:\n"
 		   "  p - pauses\n"
@@ -110,15 +99,15 @@ static void get_random_star_color(struct star *star)
 
 	switch(random() % 5) {
 	case 0:
-		r = 0xFF; g = 0xFF; b = 0xFF; break;
+		r = 0xF9; g = 0xF9; b = 0xF9; break; //white
 	case 1:
-		r = 0x00; g = 0xFF; b = 0x00; break;
+		r = 0x00; g = 0xFF; b = 0x00; break; //green
 	case 2:
-		r = 0x00; g = 0xFF; b = 0xFF; break;
+		r = 0x00; g = 0xFF; b = 0xFF; break; // turquoise
 	case 3:
-		r = 0xFF; g = 0x00; b = 0x00; break;
+		r = 0x90; g = 0x90; b = 0x90; break; 
 	default:
-		r = 0xFF; g = 0xFF; b = 0x00; break;
+		r = 0xFF; g = 0xFF; b = 0x00; break; // yellow
 	}
 
 	star->pixel.r = r;
@@ -160,23 +149,6 @@ static void do_stars(void)
 
 			S_DrawPoint(stars[i].x, stars[i].y, stars[i].pixel);
         }
-#ifdef SHOW_SHIELD_BAR
-	    if ((plshield > 0) || (shieldsleft > 0)) {
-			int shieldcount = 0;
-			int total_shields = (plshield + shieldsleft) * 19 / SHIELDTIME + 1;
-			while (total_shields > 0) {
-				shieldcount++;
-				total_shields -= 19;
-				S_DrawImage(winwidth - 20 * shieldcount, 0, 0, shieldImage);
-			}
-			while (total_shields < 0) {
-				int column;
-				column = winwidth - 20 * shieldcount - total_shields++;
-				W_MakeLine(screen, column, 0, column, 20, S_Black);
-				W_MakeLine(screen, column - 1, 0, column - 1, 20, S_Black);
-			}
-		}
-#endif /* SHOW_SHIELD_BAR */
 
 #if 0
 		if (SDL_MUSTLOCK(screen))
@@ -193,15 +165,6 @@ static void do_stars(void)
 		y = (winheight - SFont_TextHeight(fnt_big_red))/2;
 		SFont_WriteCenter(fnt_big_red, y, buf);
 
-#ifndef ORIGINAL_XGALAGA
-		if (shots > 0) {
-			y += SFont_TextHeight(fnt_big_red) + 20;
-
-			sprintf(buf, "Torps: %d  Hits: %d (%d%%)", shots, hits, (100 * hits) / shots);
-
-			SFont_WriteCenter(fnt_reg_yellow, y, buf);
-		}
-#endif
     }
 }
 

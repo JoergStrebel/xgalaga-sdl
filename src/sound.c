@@ -47,7 +47,7 @@ static const char *FILENAME[] = {
 	"smart.wav",
 };
 
-static const char *MUSICNAME = "sawsquarenoise - Boss Theme.wav";
+static const char *MUSICNAME = "sawsquarenoise_boss_theme.wav";
 
 #define NUM_SOUNDS  (sizeof(FILENAME)/sizeof(char*))
 

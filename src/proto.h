@@ -51,10 +51,8 @@ void init_score(void);
 void do_name(void);
 char *getUsersFullName(void);
 void add_score(char *name, unsigned int score);
-#if SDL_VERSION_ATLEAST(1,3,0)
 #define SDLKey SDL_Keycode
 #define SDLK_KP4 SDLK_KP_4
-#endif
 int score_key(SDLKey key);
 int check_score(unsigned int score);
 void show_scores(int top);

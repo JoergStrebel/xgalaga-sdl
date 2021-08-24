@@ -1,8 +1,13 @@
 Install the dependencies first.
 
 
-To use SDL 2, these Debian packages are needed:
-  libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev libsdl2-gfx-dev libsdl2-ttf-dev
+To use SDL 2, these packages are needed:
+
+Debian:  	libsdl2-dev, libsdl2-mixer-dev, libsdl2-image-dev, libsdl2-gfx-dev, libsdl2-ttf-dev
+openSUSE Leap:	libSDL2-devel, libSDL2-2, libSDL2_gfx-1, libSDL2_gfx-devel, libSDL2_image-2, 
+		libSDL2_image-devel, libSDL2_mixer-2, libSDL2_mixer-devel, libSDL2_ttf-2, 
+		libSDL2_ttf-devel
+
 
 Packages for rpm based distributions have similar names.
 
@@ -25,3 +30,4 @@ If you do not want install the game, you can run it in place:
 and start it with:
   src/xgalaga-sdl
 
+See also the files build_install.sh and build_local.sh 

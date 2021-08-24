@@ -68,12 +68,6 @@ static struct W_Image imagearray[] = {
 	{0, 0, 0, "s500", NULL },
 	{0, 0, 0, "shield", NULL },
 	{0, 0, 0, "title", NULL },
-
-#ifndef ORIGINAL_XGALAGA
-	{0, 0, 0, "pr_spread", NULL },
-	{0, 0, 0, "pr_machine", NULL },
-#endif
-
 	/* Fonts */
 	{0, 0, 1, "sfont_reg_green", NULL },
 	{0, 0, 1, "sfont_reg_cyan", NULL },
@@ -90,10 +84,8 @@ static struct W_Image *loadImage(int offset)
 	char filename[MAXFILENAME];
 	int w;
 	int h;
-#if SDL_VERSION_ATLEAST(1,3,0)
 	Uint32 format;
 	int access;
-#endif
 
     if (image->surface)
 		return image;
@@ -104,19 +96,8 @@ static struct W_Image *loadImage(int offset)
 	if (!simage)
 		return NULL;
 
-#if SDL_VERSION_ATLEAST(1,3,0)
 	image->surface = SDL_CreateTextureFromSurface(renderer, simage);
 	SDL_FreeSurface(simage);
-#else
-#if 0
-	/* Somehow this gives bad graphics. To fix. */
-	image->surface = SDL_DisplayFormat(simage);
-	SDL_FreeSurface(simage);
-#else
-	image->surface = simage;
-	simage = NULL;
-#endif
-#endif
 
 	if (!image->surface)
 		return NULL;
@@ -127,12 +108,7 @@ static struct W_Image *loadImage(int offset)
 					SDL_MapRGB(image->surface->format, 0x00, 0x00, 0x00));
 #endif
 
-#if SDL_VERSION_ATLEAST(1,3,0)
 	SDL_QueryTexture(image->surface, &format, &access, &w, &h);
-#else
-	w = image->surface->w;
-	h = image->surface->h;
-#endif
 
 	if (image->frames == 0) {
 		/* if an image doesn't have a number of frames, then guess how

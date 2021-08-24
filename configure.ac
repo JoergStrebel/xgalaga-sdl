@@ -12,7 +12,6 @@ AM_PROG_CC_C_O
 # Enable compilation warnings if gcc is used.
 if test "${ac_cv_c_compiler_gnu}" = "yes"; then
   CFLAGS="$CFLAGS \
-    -ggdb \
     -Wall \
 	-W \
     -Wcast-align \
@@ -22,7 +21,7 @@ if test "${ac_cv_c_compiler_gnu}" = "yes"; then
     -Wpointer-arith \
     -Wreturn-type \
     -Wstrict-prototypes \
- -std=gnu99 -D_GNU_SOURCE -pedantic-errors -O0"
+ -std=gnu99 -D_GNU_SOURCE -pedantic-errors"
 
 fi # ac_cv_c_compiler_gnu
 
