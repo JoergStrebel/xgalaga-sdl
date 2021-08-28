@@ -1,2 +1,5 @@
+- Sort out main.c and separate the simulation part from the rest
+- decouple simulation from rendering
+- increase simulation FPS
 - Get rid of xgalaga.h and only include the necesary header files in each compilation unit
 

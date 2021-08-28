@@ -49,11 +49,11 @@ extern int winheight;
 
 extern int alien_shape[];
 
-extern int weapon;
+extern int weapon; //type of weapon
 extern int maxtorps, numtorps;
 
-extern int plx;
-extern int pldead;
+extern int plx; //player x position
+extern int pldead; //flag for player's death
 
 extern int movespeed;
 

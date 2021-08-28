@@ -31,11 +31,11 @@ static struct star stars[NUMSTARS];
 static struct torp *first_etorp;
 
 static int convoyx = 0, convoymove = 1;
-static int livecount = 0;
+static int livecount = 0; //counter for the number of alive aliens
 static int starspeed = 1;
 static int attacking = 0, maxattacking, entering=0;
 static int maxetorps = 5, numetorps=0;
-static int plflash = 50;
+static int plflash = 50; //timer for flashing and invulnerability
 static int mx;
 
 static struct W_Image *playerShip;
@@ -242,8 +242,7 @@ static void do_escort(int i)
     }
 }
 
-static void
-do_convoy(int i)
+static void do_convoy(int i)
 {
     aliens[i].x += convoymove;
     if((entering == 0) &&
@@ -400,6 +399,7 @@ static void do_aliens(void)
         }
     }
 
+    /* checking how many alien ships are still alive, entering, attacking */
     livecount=0; attacking = 0;
     for(i=0, livecount=0, entering=0; i < MAXALIENS; i++) {
         if(aliens[i].alive) {
@@ -432,10 +432,14 @@ static void do_aliens(void)
                 } else {
                     aliens[i].x += moves[aliens[i].dir][0];
                     aliens[i].y += moves[aliens[i].dir][1];
+
+		    //warp around the screen borders
+		    /*
                     if(aliens[i].x > winwidth+20)
                         aliens[i].x = -20;
                     else if(aliens[i].x < -20)
                         aliens[i].x = winwidth+20;
+			*/
 
                     if(aliens[i].y > winheight) {
                         aliens[i].x = 20 * (i - 10 * (i/10)) + convoyx + convoymove;
@@ -547,7 +551,12 @@ static void do_aliens(void)
             }
         }
     }
-    if (livecount == 0 && (gstate != PAUSED)) {
+
+    /* do warp sequence 
+     * TODO: check if player is dead and ship is not visible, 
+     * because there is no point going to warp then
+     */
+    if ((livecount == 0) && (gstate != PAUSED) && (pldead==0)) {
         starspeed++;
         if(starspeed == 2)
             play_sound(SND_WARP);
@@ -665,7 +674,7 @@ static void do_etorps(void)
                 t->y+=t->yspeed;
                 t->x+=t->xspeed;
                 t->frame++;
-                if(t->y > winheight || t->x < 0 || t->x > winwidth) {
+                if(t->y > winheight || t->x < 0 || t->x > winwidth) { //this torpedo is out of bounds and gone
                     if(t->next)
                         t->next->prev = t->prev;
                     if(t->prev)
@@ -674,17 +683,19 @@ static void do_etorps(void)
                         first_etorp = t->next;
                     free(t);
                     numetorps--;
-                } else if(!pldead && !plflash && !plshield &&
+                } else //a hit - ship has no shields, is not yet dead and is not flashing
+			if(!pldead && !plflash && !plshield &&
                           (ABS(t->x - plx) < 8) &&
                           (ABS(t->y - (winheight - (int)playerShip->height / 2)) < 8)) { /* DEAD! */
-                    pldead = 1;
-                    new_explosion(plx, winheight - playerShip->height/2, 2);
-                } else {
+	                    pldead = 1;
+        	            new_explosion(plx, winheight - playerShip->height/2, 2);
+                } else { //torpedo is moving
                     S_DrawImage(t->x-(enemyTorp->width/2),
                                 t->y-(enemyTorp->height/2),
                                 t->frame, enemyTorp);
                 }
-            } else {
+            }  
+	    else { //PAUSED - torpedoes are redrawn on screen but no movement
                 S_DrawImage(t->x-(enemyTorp->width/2),
                             t->y-(enemyTorp->height/2),
                             t->frame, enemyTorp);
@@ -701,12 +712,7 @@ static void start_game(void)
 	weapon = 0;
 	movespeed = MINSPEED;
 	ships=2;
-#ifdef ACTIVATED_SHIELD
-	shieldsleft = STARTSHIELDS;
-	shieldon = 0;
-#else
 	shieldsleft = 0;
-#endif
 	level=startLevel;  /* change made here */
 	init_aliens(level);
 	gotlemon = 0;
@@ -717,35 +723,35 @@ static void start_game(void)
 	mx = plx;
 }
 
-static void do_player(int but)
+static void do_player(void)
 {
+    /* 
+     * this variable keeps its value. it is the timer value that
+     * is used to count down the time between two shots 
+     * */ 
     static int torpok;
-#ifdef ENABLE_MACHINE_GUN
-    static int shotside = 0;
-#endif
     SDL_Event event;
     static int keys = 0;
+    int but=0; //fire button is pressed 
 
+    /* 
+     * here the two game states INTRO and GETTING_NAME are handled 
+     * */
     if (gstate == INTRO) {
         while(SDL_PollEvent(&event)) {
 
             switch(event.type) {
-			case SDL_QUIT:
-				xgal_exit(0);
-				break;
+		case SDL_QUIT:
+			xgal_exit(0);
+			break;
 
-			case SDL_JOYBUTTONDOWN:
-				/* Test buttons 0 to 3. */
-				if (event.jbutton.button <= 3)
-					start_game();
-				break;
 
-            case SDL_KEYDOWN:
-                switch(event.key.keysym.sym) {
+            	case SDL_KEYDOWN:
+                	switch(event.key.keysym.sym) {
 				case SDLK_ESCAPE:
-                case SDLK_q:
-                    xgal_exit(0);
-                    break;
+		                case SDLK_q:
+                		    xgal_exit(0);
+		                    break;
 
 				case SDLK_SPACE:
 					start_game();
@@ -753,52 +759,52 @@ static void do_player(int but)
 
 				case SDLK_RETURN:
 					if (event.key.keysym.mod & (KMOD_LALT | KMOD_RALT))
-						toggle_fullscreen();
+					toggle_fullscreen();
 					break;
 
-                case SDLK_s:       /* toggle sound on the title screen */
-                    playSounds = !playSounds;
+		                case SDLK_s:       /* toggle sound on the title screen */
+                			playSounds = !playSounds;
 					return;     /* this key must not start the game */
 					break;
 
 				case SDLK_RIGHT:
 					title_page_next();
 					break;
-
+	
 				case SDLK_LEFT:
 					title_page_prev();
-					break;
+					break;	
 
 				default:
-                    return;     /* unhandled key must not cause any action */
-					break;
-                }
-
+	                	return;     /* unhandled key must not cause any action */
 				break;
+                	}
+			break;
 
-            default:
-				break;
+            	default:
+			break;
             }
-        }
+        } // while
         return;
-    }
+    } //if
 	else if (gstate == GETTING_NAME) {
+	        while(SDL_PollEvent(&event)) {
+            		switch(event.type) {
+				case SDL_QUIT:
+					xgal_exit(0);
+					break;
 
-        while(SDL_PollEvent(&event)) {
-            switch(event.type) {
-			case SDL_QUIT:
-				xgal_exit(0);
-				break;
-
-            case SDL_KEYDOWN:
-                if (score_key(event.key.keysym.sym))
-                    continue;
+            			case SDL_KEYDOWN:
+			                if (score_key(event.key.keysym.sym))
+                    			continue;
 			}
 		}
 		return;
 	}
-
-
+	
+ /* 
+  * here the game states PLAYING and PAUSED are handled
+  */
     while(SDL_PollEvent(&event)) {
 
         switch(event.type) {
@@ -806,247 +812,153 @@ static void do_player(int but)
 			xgal_exit(0);
 			break;
 
-        case SDL_KEYUP:
-            switch(event.key.keysym.sym) {
-            case SDLK_RIGHT:
-                keys &= ~RIGHTKEY;
-                break;
+        	case SDL_KEYUP:
+            		switch(event.key.keysym.sym) {
+				case SDLK_RIGHT:
+                			keys &= ~RIGHTKEY;
+		                	break;
 
-            case SDLK_LEFT:
-                keys &= ~LEFTKEY;
-                break;
+			        case SDLK_LEFT:
+        	        		keys &= ~LEFTKEY;
+                			break;
 
-            case SDLK_SPACE:
-                keys &= ~FIREKEY;
+				case SDLK_SPACE:
+		                	keys &= ~FIREKEY;
+					break;
+
+				default:
+					break;
+            		}
+            		break;
+
+        	case SDL_KEYDOWN:
+            		switch(event.key.keysym.sym) {
+            			case SDLK_RIGHT:
+					keys |= RIGHTKEY;
+                			break;
+
+			        case SDLK_LEFT:
+			                keys |= LEFTKEY;
+			                break;
+
+            			case SDLK_SPACE:
+			                keys |= FIREKEY;
+					break;
+
+			        case SDLK_g:
+                			if(!pldead  && (gstate != PAUSED)) {
+			                    new_explosion(plx, winheight - ((playerShip->height)/2), 2);
+                    			    ships = 0;
+                    			    pldead = 1;
+                			}
+					break;
+
+            			case SDLK_q:
+                			xgal_exit(0);
 				break;
 
-#ifdef ACTIVATED_SHIELD
-			case SDLK_x:
-				shieldsleft += plshield;
-				plshield = 0;
-				shieldon = 0;
-				break;
-#endif
-			default:
-				break;
-            }
-            break;
+            			case SDLK_p:
+					if (gstate == PAUSED)
+						gstate = PLAYING;
+					else
+						gstate = PAUSED;
+					break;
 
-        case SDL_KEYDOWN:
-            switch(event.key.keysym.sym) {
-            case SDLK_RIGHT:
-                keys |= RIGHTKEY;
-                break;
-
-            case SDLK_LEFT:
-                keys |= LEFTKEY;
-                break;
-
-            case SDLK_SPACE:
-                keys |= FIREKEY;
-				break;
-
-#ifdef ACTIVATED_SHIELD
-			case SDLK_x:
-				plshield += shieldsleft;
-				shieldsleft = 0;
-				shieldon = 1;
-				break;
-#endif
-
-            case SDLK_g:
-                if(!pldead  && (gstate != PAUSED)) {
-                    new_explosion(plx, winheight - ((playerShip->height)/2), 2);
-                    ships = 0;
-                    pldead = 1;
-                }
-				break;
-
-            case SDLK_q:
-                xgal_exit(0);
-				break;
-
-            case SDLK_p:
-				if (gstate == PAUSED)
-					gstate = PLAYING;
-				else
-					gstate = PAUSED;
-				break;
-
-            case SDLK_s:
-                playSounds = !playSounds;
-				break;
+            			case SDLK_s:
+			                playSounds = !playSounds;
+					break;
 
 #ifdef IM_A_BIG_FAT_CHEATER
-            case SDLK_i:
-                if(plflash >= 0)
-                    plflash = -2;
-                else
-                    plflash = 0;
-				break;
+            			case SDLK_i:
+                			if(plflash >= 0)
+                    				plflash = -2;
+                			else
+                    				plflash = 0;
+					break;
 
-            case SDLK_l:
-			{
-				int i;
-				for(i=0;i<MAXALIENS;i++)
-					aliens[i].alive=0;
-				if(starspeed != 1)
-					level++;
-			}
-			break;
+            			case SDLK_l: {
+					int i;
+					for(i=0;i<MAXALIENS;i++)
+						aliens[i].alive=0;
+						if(starspeed != 1)
+						level++;
+					}
+					break;
 
-            case SDLK_c:
-                score+= BONUSSHIPSCORE;
-				break;
+            			case SDLK_c:
+			                score+= BONUSSHIPSCORE;
+					break;
 
-            case SDLK_h:
-                plshield = SHIELDTIME;
-				play_sound(SND_SHIELD);
-				break;
+			        case SDLK_h:
+			                plshield = SHIELDTIME;
+					play_sound(SND_SHIELD);
+					break;
 
-            case SDLK_w:
-                weapon++;
-				if(weapon == NUMWEAPONS)
-					weapon=0;
-				break;
+            			case SDLK_w:
+                			weapon++;
+					if(weapon == NUMWEAPONS)
+						weapon=0;
+					break;
 
-            case SDLK_t:
-                maxtorps++;
-				if(maxtorps > MAXTORPS)
-					maxtorps = MINTORPS;
-				break;
+            			case SDLK_t:
+                			maxtorps++;
+					if(maxtorps > MAXTORPS)
+						maxtorps = MINTORPS;
+					break;
 
 #endif /* IM_A_BIG_FAT_CHEATER */
 
-			case SDLK_RETURN:
-				if (event.key.keysym.mod & (KMOD_LALT | KMOD_RALT))
-					toggle_fullscreen();
-				break;
+				case SDLK_RETURN:
+					if (event.key.keysym.mod & (KMOD_LALT | KMOD_RALT))
+						toggle_fullscreen();
+					break;
 
-            default:
-                break;
-            }
+            			default:
+	                		break;
+            	} //keydown
 			break;
 
-		case SDL_JOYBUTTONDOWN:
-			/* Test buttons 0 to 3. */
-			if (event.jbutton.button <= 3)
-				keys |= FIREKEY;
-			break;
+        } //eventtype
+    } //while
 
-		case SDL_JOYBUTTONUP:
-			/* Test buttons 0 to 3. */
-			if (event.jbutton.button <= 3)
-				keys &= ~FIREKEY;
-			break;
-
-		case SDL_JOYHATMOTION:
-			if (event.jhat.value & SDL_HAT_RIGHT) {
-				keys |= RIGHTKEY;
-				keys &= ~LEFTKEY;
-			}
-			else if (event.jhat.value & SDL_HAT_LEFT) {
-				keys |= LEFTKEY;
-				keys &= ~RIGHTKEY;
-			}
-			else
-				keys &= ~(LEFTKEY | RIGHTKEY);
-			break;
-
-		case SDL_JOYAXISMOTION:
-			/* My gamepad has 2 analog input, with X being axis 0 and 3. */
-			if (event.jaxis.axis == 0 || event.jaxis.axis == 3)  {
-				if (event.jaxis.value < -10000) {
-					keys |= LEFTKEY;
-					keys &= ~RIGHTKEY;
-				}
-				else if (event.jaxis.value > 10000) {
-					keys |= RIGHTKEY;
-					keys &= ~LEFTKEY;
-				}
-				else
-					keys &= ~(LEFTKEY | RIGHTKEY);
-			}
-			break;
-        }
-    }
-
+/*
+ * The inputs are now available so now comes the actual game logic
+ * The game state is calculated and the game data is updated
+ */
     if (gstate != PAUSED) {
-        torpok--;
+	torpok--; //count down torpedo timer
 
-		if(keys & LEFTKEY)
-			mx = 0;
-		else if(keys & RIGHTKEY)
+	// unclear what mx is doing
+	if(keys & LEFTKEY)
+		mx = 0;
+	else 
+		if(keys & RIGHTKEY)
 			mx = winwidth;
 		else
 			mx = plx;
 
-		if(keys & FIREKEY)
-			but = 1;
-		else
-			but = 0;
+	if(keys & FIREKEY)
+		but = 1;
+	else
+		but = 0;
 
+	// the player has died
         if(pldead) {
             pldead++;
+	    /* the game waits 100 frames between the explosion and either the next game state 
+	     * or the continuation of the game with the next ship*/
             if(pldead >= 100) {
                 if(ships<=0) {
                     if(check_score(score)) {
-#ifdef USE_REAL_NAMES
-                        add_score(getUsersFullName(), score);
-                        title_page = 1; pagetimer = 300;
-						gstate = INTRO;
-#else
 						gstate = GETTING_NAME;
-#endif
                     } else {
 						gstate = INTRO;
 					}
                 } else {
-#ifdef DISABLE_RESET_ON_DEATH
-                    ships--;
-                    maxtorps--;
-                    if (maxtorps < MINTORPS)
-                    	maxtorps = MINTORPS;
-                    switch (weapon)
-                    {
-					case SINGLESHOT:
-						if (maxtorps < 3)
-						{
-							maxtorps = 3;
-							weapon = SINGLESHOT;
-						}
-						break;
-					case DOUBLESHOT:
-						if (maxtorps < 4)
-						{
-							maxtorps = 4;
-						}
-						break;
-					case SPREADSHOT:
-						if (maxtorps < 5)
-						{
-							maxtorps = 5;
-						}
-						break;
-					case TRIPLESHOT:
-						if (maxtorps < 6)
-						{
-							maxtorps = 6;
-						}
-						break;
-					case MACHINEGUN:
-						if (maxtorps < 3)
-						{
-							maxtorps = 3;
-						}
-						break;
-					}
-#else
                     ships--;
                     maxtorps = MINTORPS;
                     weapon = 0;
                     movespeed = MINSPEED;
-#endif /* DISABLE_RESET_ON_DEATH */
                     pldead = 0;
                     plflash = 50;
                     plx = winwidth/2;
@@ -1054,7 +966,8 @@ static void do_player(int but)
             }
             return;
         }
-
+	// the player fires, the torpedo timer is 0 and we are not in warp mode 
+	// -> go and launch torpedo!
         if(but && torpok <= 0 && (starspeed == 1)) {
             switch(weapon) {
             case SINGLESHOT:
@@ -1077,56 +990,6 @@ static void do_player(int but)
 					torpok = TORPDELAY;
                 }
                 break;
-#ifdef ENABLE_SPREAD_SHOT
-            case SPREADSHOT:
-            	if (numtorps == 0)
-                {
-					if ((maxtorps % 2) == 1)
-						new_torp(plx, winheight - playerShip->height, 0, -TORPSPEED*1.15);
-					else
-					{
-						new_torp(plx - 5, winheight - playerShip->height, 0, -TORPSPEED*1.15);
-						new_torp(plx + 5, winheight - playerShip->height, 0, -TORPSPEED*1.15);
-					}
-					if (maxtorps > 2)
-					{
-						new_torp(plx, winheight - playerShip->height - 15, -2, -TORPSPEED*1.15);
-						new_torp(plx, winheight - playerShip->height - 15, 2, -TORPSPEED*1.15);
-					}
-					if (maxtorps > 4)
-					{
-						new_torp(plx, winheight - playerShip->height - 25, -4, -TORPSPEED*1.15);
-						new_torp(plx, winheight - playerShip->height - 25, 4, -TORPSPEED*1.15);
-					}
-					if (maxtorps > 6)
-					{
-						new_torp(plx, winheight - playerShip->height - 35, -6, -TORPSPEED*1.15);
-						new_torp(plx, winheight - playerShip->height - 35, 6, -TORPSPEED*1.15);
-					}
-					if (maxtorps > 8)
-					{
-						new_torp(plx, winheight - playerShip->height - 50, -8, -TORPSPEED*1.15);
-						new_torp(plx, winheight - playerShip->height - 50, 8, -TORPSPEED*1.15);
-					}
-					if (maxtorps > 10)
-					{
-						new_torp(plx, winheight - playerShip->height - 60, -10, -TORPSPEED*1.15);
-						new_torp(plx, winheight - playerShip->height - 60, 10, -TORPSPEED*1.15);
-					}
-					torpok = TORPDELAY;
-				}
-				break;
-#endif /* ENABLE_SPREAD_SHOT */
-#ifdef ENABLE_MACHINE_GUN
-            case MACHINEGUN:
-				if(numtorps < maxtorps)
-				{
-					shotside = (shotside == -15) ? 15 : -15;
-					new_torp(plx + shotside, winheight - playerShip->height, 0, -TORPSPEED * 1.3);
-					torpok = TORPDELAY - 2;
-				}
-				break;
-#endif /* ENABLE_MACHINE_GUN */
 			}
 		}
 
@@ -1134,34 +997,33 @@ static void do_player(int but)
         if(!but)
             torpok=0;
 
+	//unclear why we need to divide by movespeed here?
         if((mx/movespeed) > (plx/movespeed))
             plx+=movespeed;
         else if((mx/movespeed) < (plx/movespeed))
             plx-=movespeed;
-#ifdef ENABLE_SHIP_WRAP
-
-        if(plx < 10)
-        	plx=winwidth - 10;
-        if(plx > winwidth - 10)
-			plx=10;
-#else
-
+	
+	// boundary check
         if(plx < playerShip->width/2)
             plx=playerShip->width/2;
         if(plx> winwidth - playerShip->width/2)
             plx=winwidth - playerShip->width/2;
-#endif
 
+	//make ship flash
         if(plflash > 0)
             plflash--;
         if(!(plflash % 2))
             S_DrawImage(plx-(playerShip->width/2), winheight - playerShip->height, counter, playerShip);
-        if(plshield > 0)
+
+	//draw shields 
+	if(plshield > 0)
             plshield--;
         if(plshield && ((plshield > SHIELDTIME/4) || plshield % 2)) {
             S_DrawImage(plx-(shieldImage->width/2), winheight - shieldImage->height - 3, 0, shieldImage);
         }
-    } else if (!pldead) { /* paused */
+
+    } //not paused
+    else if (!pldead) { /* paused - but ship is redrawn*/
         S_DrawImage(plx-(playerShip->width/2), winheight - playerShip->height, counter, playerShip);
     }
 }
@@ -1184,10 +1046,7 @@ static int init_fonts(void)
 
 int main(int argc, char *argv[])
 {
-    int ac;
-    int but=0;
-    
-    for(ac = 1; ac < argc; ac++) {
+    for(int ac = 1; ac < argc; ac++) {
         if(*argv[ac] == '-') {
             int w, h;
             if(strcmp(argv[ac], "-scores") == 0) {
@@ -1283,7 +1142,7 @@ int main(int argc, char *argv[])
         undo_aliens();
 
         do_etorps();
-        do_player(but);
+        do_player();
         do_aliens();
         do_torps();
         do_prizes();
